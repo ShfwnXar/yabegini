@@ -108,7 +108,7 @@ function Stepper() {
       key: "step2" as const,
       label: "Step 2 - Input Atlet + Kategori",
       href: "/dashboard/pendaftaran/atlet",
-      note: getStepNote(step2Status, "Pilih kategori per atlet sesuai kuota"),
+      note: getStepNote(step2Status, "Isi atlet dan kategori dulu, tanpa perlu pembayaran"),
       disabled: !step2Status.isOpen,
     },
     {
@@ -122,7 +122,7 @@ function Stepper() {
       key: "step4" as const,
       label: "Step 4 - Upload Dokumen Atlet",
       href: "/dashboard/pendaftaran/dokumen",
-      note: getStepNote(step4Status, "Upload 5 dokumen per atlet"),
+      note: getStepNote(step4Status, "Terbuka setelah pembayaran Step 3 dikirim"),
       disabled: !step4Status.isOpen || !hasSubmittedPayment,
     },
   ]
@@ -137,7 +137,7 @@ function Stepper() {
             </div>
             <CardTitle className="mt-1">Alur Pendaftaran (Step 1-4)</CardTitle>
             <CardDescription className="mt-2">
-              Step 4 terbuka setelah bukti pembayaran dikirim dan jadwal step dari admin sedang aktif.
+              Step 2 bisa diisi tanpa pembayaran. Pembayaran dilakukan di Step 3, lalu Step 4 terbuka untuk upload dokumen setelah bukti bayar dikirim.
             </CardDescription>
 
             <div className="mt-3 flex flex-wrap gap-2 items-center">
@@ -237,7 +237,7 @@ function Stepper() {
         </div>
 
         <div className="mt-4 text-xs text-gray-500">
-          Catatan: Setelah upload bukti bayar, status akan <b>PENDING</b> sampai admin memverifikasi. Step 4 sudah bisa dibuka setelah bukti pembayaran dikirim.
+          Catatan: Anda bisa menyelesaikan Step 2 terlebih dahulu. Setelah upload bukti bayar di Step 3, status menjadi <b>PENDING</b> sampai admin memverifikasi, dan Step 4 bisa dibuka untuk upload dokumen.
         </div>
       </CardContent>
     </Card>

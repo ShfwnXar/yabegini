@@ -739,7 +739,7 @@ export default function Step2AtletPage() {
             <p className="text-gray-600 mt-2">
               Step 2: pilih <b>kategori/kelas/nomor</b>, lalu input atlet sesuai kuota dari Step 1 (per cabor).<br />
               <span className="text-gray-500">
-                Catatan: kategori <b>Ganda</b> otomatis input <b>2 atlet</b>, kategori <b>Tim/Beregu</b> otomatis input sesuai roster.
+                Catatan: kategori <b>Ganda</b> otomatis input <b>2 atlet</b>, kategori <b>Tim/Beregu</b> otomatis input sesuai roster. Pembayaran belum diperlukan di step ini, dan baru dilakukan pada <b>Step 3</b> sebelum upload dokumen di <b>Step 4</b>.
               </span>
             </p>
 
@@ -773,8 +773,8 @@ export default function Step2AtletPage() {
               {totalFilled} / {totalPlan}
             </div>
             <div className="mt-2 flex gap-2">
-              <Link href="/dashboard/pembayaran" className="px-3 py-2 rounded-lg border bg-white font-bold hover:bg-gray-50 text-sm">
-                Step 3
+              <Link href="/dashboard/pembayaran" className="px-3 py-2 rounded-lg bg-gradient-to-r from-emerald-500 via-lime-500 to-teal-500 font-bold text-white shadow-[0_10px_28px_rgba(16,185,129,0.28)] hover:brightness-105 text-sm">
+                Lanjut Step 3
               </Link>
               <Link
                 href="/dashboard/pendaftaran/dokumen"
@@ -791,6 +791,9 @@ export default function Step2AtletPage() {
               >
                 Step 4
               </Link>
+            </div>
+            <div className="mt-2 text-xs text-gray-500">
+              Step 2 bisa langsung dikerjakan. Step 4 baru aktif setelah pembayaran dikirim di Step 3.
             </div>
           </div>
         </div>
@@ -1254,6 +1257,13 @@ export default function Step2AtletPage() {
 
           <div className="mt-6 flex flex-col md:flex-row gap-3">
             <Link
+              href="/dashboard/pembayaran"
+              className="px-5 py-2 rounded-xl font-extrabold text-center bg-gradient-to-r from-emerald-500 via-lime-500 to-teal-500 text-white shadow-[0_10px_28px_rgba(16,185,129,0.28)] hover:brightness-105"
+            >
+              Lanjut Step 3 (Pembayaran)
+            </Link>
+
+            <Link
               href="/dashboard/pendaftaran/dokumen"
               className={cx(
                 "px-5 py-2 rounded-xl font-extrabold text-center",
@@ -1267,13 +1277,6 @@ export default function Step2AtletPage() {
               }}
             >
               Lanjut Step 4 (Upload Dokumen)
-            </Link>
-
-            <Link
-              href="/dashboard/pembayaran"
-              className="px-5 py-2 rounded-xl font-extrabold border bg-white hover:bg-gray-50 text-center"
-            >
-              Kembali Step 3
             </Link>
           </div>
         </div>
