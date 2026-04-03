@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useRegistration } from "@/context/RegistrationContext"
 import { useAuth } from "@/context/AuthContext"
@@ -48,7 +48,7 @@ export default function Step1PilihCaborDanJumlahPage() {
   }, [user])
 
   const additionalDue = Math.max(0, state.payment.totalFee - approvedTotal)
-  const isLocked = state.payment.status === "PENDING"
+  const isLocked = state.payment.status === "PENDING" || state.payment.status === "APPROVED"
 
   const selectedIds = useMemo(() => new Set(state.sports.map((s) => s.id)), [state.sports])
   const selectedCount = state.sports.length
@@ -64,7 +64,7 @@ export default function Step1PilihCaborDanJumlahPage() {
   const toggleSport = (id: string) => {
     setMsg(null)
     if (isLocked) {
-      setMsg({ type: "error", text: "Step 1 terkunci karena pembayaran tambahan sedang PENDING." })
+      setMsg({ type: "error", text: "Step 1 terkunci karena pembayaran sudah diajukan atau disetujui." })
       return
     }
 
@@ -90,12 +90,6 @@ export default function Step1PilihCaborDanJumlahPage() {
     ]
     setSports(next)
   }
-
-  useEffect(() => {
-    if (state.payment.status !== "APPROVED") return
-    if (additionalDue <= 0) return
-    dispatch({ type: "SET_PAYMENT_STATUS", status: "NONE" })
-  }, [additionalDue, dispatch, state.payment.status])
 
   const goToPayment = async () => {
     if (selectedCount === 0) return
@@ -150,7 +144,7 @@ export default function Step1PilihCaborDanJumlahPage() {
 
               {isLocked && (
                 <div className="mt-3 text-sm text-amber-800">
-                  Step 1 dikunci sementara selama bukti pembayaran tambahan sedang diverifikasi.
+                  Step 1 terkunci setelah pembayaran diajukan atau disetujui, sehingga kuota tidak bisa diubah lagi.
                 </div>
               )}
             </div>
@@ -169,7 +163,7 @@ export default function Step1PilihCaborDanJumlahPage() {
                 ) : null}
               </div>
               <div className="mt-2 text-xs text-gray-500">
-                Setelah upload bukti bayar -&gt; status PENDING -&gt; Step 1 dan Step 2 terkunci.
+                Setelah pembayaran diajukan, Step 1 otomatis terkunci agar kuota tidak berubah.
               </div>
             </div>
           </div>
@@ -359,7 +353,7 @@ export default function Step1PilihCaborDanJumlahPage() {
                     </div>
                     {isLocked && (
                       <div className="mt-3 text-xs text-amber-700 font-semibold">
-                        Terkunci karena pembayaran tambahan sedang PENDING.
+                        Terkunci karena pembayaran sudah diajukan atau disetujui.
                       </div>
                     )}
                   </div>
