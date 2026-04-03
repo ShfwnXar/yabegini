@@ -235,10 +235,6 @@ function Stepper() {
             )
           })}
         </div>
-
-        <div className="mt-4 text-xs text-gray-500">
-          Catatan: Anda bisa menyelesaikan Step 2 terlebih dahulu. Setelah upload bukti bayar di Step 3, status menjadi <b>PENDING</b> sampai admin memverifikasi, dan Step 4 bisa dibuka untuk upload dokumen.
-        </div>
       </CardContent>
     </Card>
   )
