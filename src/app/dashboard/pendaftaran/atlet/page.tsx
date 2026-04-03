@@ -17,7 +17,6 @@ import { readRevisionMode } from "@/lib/registrationFlow"
 import { Repos } from "@/repositories"
 import {
   getActiveAthleteCount,
-  getApprovedAthleteQuota,
   getApprovedExtraSlotsForSport,
   getExtraAccess,
   getPendingTopUpCount,
@@ -130,7 +129,6 @@ export default function Step2AtletPage() {
   const athleteStepLocked = (state.payment.status === "PENDING" || state.payment.status === "APPROVED") && !revisionOpen
   const canEditAthleteStep = !athleteStepLocked
   const canOpenDocuments = state.payment.status === "PENDING" || state.payment.status === "APPROVED" || revisionOpen
-  const approvedAthleteQuota = getApprovedAthleteQuota(state as any)
   const activeAthleteCount = getActiveAthleteCount(state as any)
   const pendingTopUpCount = getPendingTopUpCount(state as any)
   const extraAccess = getExtraAccess(state as any)
@@ -262,7 +260,7 @@ export default function Step2AtletPage() {
   const approvedExtraSlotsForSport = useMemo(() => getApprovedExtraSlotsForSport(state as any, selectedSportId), [state, selectedSportId])
   const usedExtraSlotsForSport = useMemo(() => getUsedExtraSlotsForSport(state as any, selectedSportId), [state, selectedSportId])
   const extraSlotsRemaining = Math.max(0, approvedExtraSlotsForSport - usedExtraSlotsForSport)
-  const paidSlotsRemaining = Math.max(0, approvedAthleteQuota - initialAthletesCount)
+  const initialSlotsRemaining = Math.max(0, totalPlan - initialAthletesCount)
 
   // ==== kategori summary card ====
   const categorySummary = useMemo(() => {
@@ -402,12 +400,12 @@ export default function Step2AtletPage() {
   }, [athleteForms])
 
   const needRoster = Math.max(1, rosterSize || 1)
-  const canUsePaidSlots =
+  const canUseInitialQuota =
     canEditAthleteStep &&
     !!selectedSportId &&
     !!selectedCategoryId &&
     rosterFieldsValid &&
-    paidSlotsRemaining >= needRoster &&
+    remainingInSport >= needRoster &&
     remainingInCategory >= needRoster
 
   const canUseExtraSlots =
@@ -420,7 +418,7 @@ export default function Step2AtletPage() {
     extraSlotsRemaining >= needRoster &&
     remainingInCategory >= needRoster
 
-  const canAddRoster = canUsePaidSlots || canUseExtraSlots
+  const canAddRoster = canUseInitialQuota || canUseExtraSlots
 
   const reloadTeams = async () => {
     if (ENV.USE_MOCK || !activeRegistrationId) return
@@ -546,8 +544,8 @@ export default function Step2AtletPage() {
       return
     }
 
-    if (!canUsePaidSlots && !canUseExtraSlots) {
-      alert("Slot terbayar habis. Ajukan tambah peserta, tunggu persetujuan admin, lalu selesaikan pembayaran tambahan terlebih dahulu.")
+    if (!canUseInitialQuota && !canUseExtraSlots) {
+      alert("Slot cabor atau kategori sudah penuh. Kurangi isian yang ada atau ajukan tambah peserta jika butuh slot tambahan.")
       return
     }
 
@@ -570,7 +568,7 @@ export default function Step2AtletPage() {
       return
     }
 
-    if (canUsePaidSlots) {
+    if (canUseInitialQuota) {
       for (let i = 0; i < needRoster; i++) {
         const a = athleteForms[i]
         if (!a?.name?.trim()) return alert("Nama atlet " + (i + 1) + " wajib diisi.")
@@ -748,7 +746,7 @@ export default function Step2AtletPage() {
                 Payment: {state.payment.status}
               </span>
               <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border bg-blue-50 text-blue-800 border-blue-200">
-                Kuota terbayar: {approvedAthleteQuota}
+                Kuota awal: {totalPlan}
               </span>
               <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border bg-emerald-50 text-emerald-800 border-emerald-200">
                 Atlet aktif: {activeAthleteCount}
@@ -836,7 +834,7 @@ export default function Step2AtletPage() {
               <b>Sisa:</b> {Math.max(0, remainingInSport)}
             </div>
           </div>
-            <div className="mt-1"><b>Sisa slot terbayar:</b> {paidSlotsRemaining}</div>
+            <div className="mt-1"><b>Sisa slot kuota awal:</b> {Math.max(0, remainingInSport)}</div>
             <div className="mt-1"><b>Status akses tambahan:</b> {extraAccess.status}</div>
           {sportQuota <= 0 && (
             <div className="mt-3 text-xs font-bold text-red-700">
@@ -1050,7 +1048,7 @@ export default function Step2AtletPage() {
             <div className="rounded-xl border bg-gray-50 p-4">
               <div className="text-sm font-extrabold text-gray-900">Validasi Kuota</div>
               <div className="text-sm text-gray-700 mt-2">
-                <div className="mt-1"><b>Sisa slot terbayar:</b> {paidSlotsRemaining}</div>
+                <div className="mt-1"><b>Sisa slot kuota awal:</b> {Math.max(0, remainingInSport)}</div>
                 <div className="mt-1"><b>Sisa slot akses tambahan:</b> {extraAccess.status === "OPEN" ? extraSlotsRemaining : 0}</div>
                 <div>
                   <b>Sisa kuota cabor:</b> {Math.max(0, remainingInSport)}
@@ -1187,7 +1185,7 @@ export default function Step2AtletPage() {
                   <div>
                     <div className="font-extrabold text-gray-900">{a.name}</div>
                     <div className="mt-1 text-xs font-bold text-gray-600">
-                      {(a as any)?.registrationState?.source === "EXTRA_ACCESS" ? "Masuk kuota tambahan" : "Masuk kuota terbayar"}
+                      {(a as any)?.registrationState?.source === "EXTRA_ACCESS" ? "Masuk kuota tambahan" : "Masuk kuota awal"}
                     </div>
                     <div className="text-xs text-gray-600 mt-1">
                       <b>Kategori:</b> {categoryLabel(a.sportId, a.categoryId)}
