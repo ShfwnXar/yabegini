@@ -735,10 +735,7 @@ export default function Step2AtletPage() {
           <div>
             <h1 className="text-2xl font-extrabold text-gray-900">Step 2 - Input Atlet + Kategori</h1>
             <p className="text-gray-600 mt-2">
-              Step 2: pilih <b>kategori/kelas/nomor</b>, lalu input atlet sesuai kuota dari Step 1 (per cabor).<br />
-              <span className="text-gray-500">
-                Catatan: kategori <b>Ganda</b> otomatis input <b>2 atlet</b>, kategori <b>Tim/Beregu</b> otomatis input sesuai roster. Pembayaran belum diperlukan di step ini, dan baru dilakukan pada <b>Step 3</b> sebelum upload dokumen di <b>Step 4</b>.
-              </span>
+              Step 2: pilih <b>kategori/kelas/nomor</b>, lalu input atlet sesuai kuota dari Step 1 (per cabor).
             </p>
 
             <div className="mt-3 flex flex-wrap gap-2">
@@ -789,9 +786,6 @@ export default function Step2AtletPage() {
               >
                 Step 4
               </Link>
-            </div>
-            <div className="mt-2 text-xs text-gray-500">
-              Step 2 bisa langsung dikerjakan. Step 4 baru aktif setelah pembayaran dikirim di Step 3.
             </div>
           </div>
         </div>

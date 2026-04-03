@@ -136,9 +136,6 @@ function Stepper() {
               PENDAFTARAN
             </div>
             <CardTitle className="mt-1">Alur Pendaftaran (Step 1-4)</CardTitle>
-            <CardDescription className="mt-2">
-              Step 2 bisa diisi tanpa pembayaran. Pembayaran dilakukan di Step 3, lalu Step 4 terbuka untuk upload dokumen setelah bukti bayar dikirim.
-            </CardDescription>
 
             <div className="mt-3 flex flex-wrap gap-2 items-center">
               <Badge tone={paymentTone(state.payment.status)}>
